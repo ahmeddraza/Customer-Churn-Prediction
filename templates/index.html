@@ -490,7 +490,7 @@
             {% for feature in top_features %}
             <div class="feature-item">
                 <div class="feature-name">{{ feature.name }}</div>
-                <div class="feature-value">{{ feature.value }}</div>
+                <div class="feature-value">{{ feature.value }}%</div>
                 <div class="feature-bar">
                     <div class="bar-fill" data-width="{{ feature.value }}"></div>
                 </div>
@@ -499,9 +499,9 @@
         </div>
         
         <script>
-            // Set bar widths using JavaScript to avoid Jinja syntax issues
+            // Set bar widths using JavaScript
             document.querySelectorAll('.bar-fill').forEach(function(bar) {
-                var width = parseFloat(bar.getAttribute('data-width')) * 100;
+                var width = parseFloat(bar.getAttribute('data-width'));
                 if (width > 100) width = 100;
                 if (width < 0) width = 0;
                 bar.style.width = width + '%';

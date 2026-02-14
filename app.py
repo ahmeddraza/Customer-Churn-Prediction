@@ -145,32 +145,40 @@ def predict():
     try:
         data = request.form.to_dict()
         
+        # Step 1: Predict churn status
         input_df_churn = preprocess_for_churn(data)
         prediction = rf.predict(input_df_churn)
         prediction_label = le.inverse_transform(prediction)[0]
         
         print(f"✅ Churn Prediction: {prediction_label}")
         
+        # Initialize response variables
         category_label = None
         top_features = None
         insights = None
         recommendations = None
         
+        # Step 2: If churned, predict category and get SHAP values
         if prediction_label == "Churned" and HAS_CATEGORY_MODEL:
             try:
+                # Preprocess for category prediction
                 input_df_category = preprocess_for_category(data)
                 
+                # Predict category
                 category_prediction = rf_category.predict(input_df_category)
                 category_label = le_category.inverse_transform(category_prediction)[0]
                 
                 print(f"✅ Category: {category_label}")
                 
+                # Compute SHAP values for churn model
                 explainer = shap.TreeExplainer(rf)
                 shap_values = explainer.shap_values(input_df_churn)
                 
+                # Get SHAP values for "Churned" class
                 churned_class_index = list(le.classes_).index("Churned")
                 shap_values_churned = shap_values[churned_class_index][0]
                 
+                # Get top features
                 feature_impact = pd.DataFrame({
                     'feature': feature_names,
                     'shap_value': shap_values_churned
@@ -178,11 +186,16 @@ def predict():
                 feature_impact = feature_impact.sort_values('shap_value', ascending=False)
                 top_hurting = feature_impact[feature_impact['shap_value'] > 0].head(10)
                 
+                # Format for template (convert to percentage and round)
                 top_features = [
-                    {'name': row['feature'], 'value': row['shap_value']}
+                    {
+                        'name': row['feature'], 
+                        'value': round(row['shap_value'] * 100, 2)  # Convert to percentage and round to 2 decimals
+                    }
                     for idx, row in top_hurting.iterrows()
                 ]
                 
+                # Generate insights
                 insights = []
                 if data.get('contract') == 'Month-to-Month':
                     insights.append("Month-to-Month contract - no commitment")
@@ -197,6 +210,7 @@ def predict():
                 if float(data.get('monthly_charge', 0)) > 80:
                     insights.append(f"High monthly charge (${data.get('monthly_charge')})")
                 
+                # Generate recommendations based on category
                 recommendations = []
                 if 'competitor' in category_label.lower():
                     recommendations.append("Conduct competitive analysis")
@@ -218,6 +232,7 @@ def predict():
                     recommendations.append("Conduct exit interview to identify specific reasons")
                     recommendations.append("Personalized retention approach")
                 
+                # Add general recommendations
                 recommendations.append(f"Address {category_label.lower()} concerns specifically")
                 recommendations.append("Proactive follow-up within 24 hours")
                 
