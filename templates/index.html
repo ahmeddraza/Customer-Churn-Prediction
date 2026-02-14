@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Churn Prediction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+        
+        input, select {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .submit-btn {
+            grid-column: 1 / -1;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .result.churned {
+            background-color: #fee;
+            color: #c33;
+        }
+        
+        .result.stayed {
+            background-color: #efe;
+            color: #3c3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Customer Churn Prediction</h1>
+        <p class="subtitle">Random Forest Model - Predict if a customer will stay or leave</p>
+        
+        <form action="/predict" method="POST">
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select name="gender" id="gender" required>
+                    <option value="">Select</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" name="age" id="age" min="18" max="100" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="married">Married</label>
+                <select name="married" id="married" required>
+                    <option value="">Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="number_of_dependents">Number of Dependents</label>
+                <input type="number" name="number_of_dependents" id="number_of_dependents" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" name="city" id="city" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="number_of_referrals">Number of Referrals</label>
+                <input type="number" name="number_of_referrals" id="number_of_referrals" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="tenure_in_months">Tenure in Months</label>
+                <input type="number" name="tenure_in_months" id="tenure_in_months" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="offer">Offer</label>
+                <select name="offer" id="offer" required>
+                    <option value="">Select</option>
+                    <option value="Offer A">Offer A</option>
+                    <option value="Offer B">Offer B</option>
+                    <option value="Offer C">Offer C</option>
+                    <option value="Offer D">Offer D</option>
+                    <option value="Offer E">Offer E</option>
+                    <option value="None">None</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone_service">Phone Service</label>
+                <select name="phone_service" id="phone_service" required>
+                    <option value="">Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="avg_monthly_long_distance_charges">Avg Monthly Long Distance Charges</label>
+                <input type="number" name="avg_monthly_long_distance_charges" id="avg_monthly_long_distance_charges" step="0.01" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="multiple_lines">Multiple Lines</label>
+                <select name="multiple_lines" id="multiple_lines" required>
+                    <option value="">Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="internet_service">Internet Service</label>
+                <select name="internet_service" id="internet_service" required>
+                    <option value="">Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="internet_type">Internet Type</label>
+                <select name="internet_type" id="internet_type" required>
+                    <option value="">Select</option>
+                    <option value="DSL">DSL</option>
+                    <option value="Fiber Optic">Fiber Optic</option>
+                    <option value="Cable">Cable</option>
+                    <option value="None">None</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="avg_monthly_gb_download">Avg Monthly GB Download</label>
+                <input type="number" name="avg_monthly_gb_download" id="avg_monthly_gb_download" step="0.01" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="online_security">Online Security</label>
+                <select name="online_security" id="online_security" required>
+                    <option value="">Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="online_backup">Online Backup</label>
+                <select name="online_backup" id="online_backup" required>
+                    <option value="">Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="device_protection_plan">Device Protection Plan</label>
+                <select name="device_protection_plan" id="device_protection_plan" required>
+                    <option value="">Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="premium_tech_support">Premium Tech Support</label>
+                <select name="premium_tech_support" id="premium_tech_support" required>
+                    <option value="">Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="streaming_tv">Streaming TV</label>
+                <select name="streaming_tv" id="streaming_tv" required>
+                    <option value="">Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="streaming_movies">Streaming Movies</label>
+                <select name="streaming_movies" id="streaming_movies" required>
+                    <option value="">Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="streaming_music">Streaming Music</label>
+                <select name="streaming_music" id="streaming_music" required>
+                    <option value="">Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="unlimited_data">Unlimited Data</label>
+                <select name="unlimited_data" id="unlimited_data" required>
+                    <option value="">Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="contract">Contract</label>
+                <select name="contract" id="contract" required>
+                    <option value="">Select</option>
+                    <option value="Month-to-Month">Month-to-Month</option>
+                    <option value="One Year">One Year</option>
+                    <option value="Two Year">Two Year</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="paperless_billing">Paperless Billing</label>
+                <select name="paperless_billing" id="paperless_billing" required>
+                    <option value="">Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="payment_method">Payment Method</label>
+                <select name="payment_method" id="payment_method" required>
+                    <option value="">Select</option>
+                    <option value="Bank Withdrawal">Bank Withdrawal</option>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="Mailed Check">Mailed Check</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="monthly_charge">Monthly Charge</label>
+                <input type="number" name="monthly_charge" id="monthly_charge" step="0.01" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="total_refunds">Total Refunds</label>
+                <input type="number" name="total_refunds" id="total_refunds" step="0.01" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="total_extra_data_charges">Total Extra Data Charges</label>
+                <input type="number" name="total_extra_data_charges" id="total_extra_data_charges" step="0.01" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="total_long_distance_charges">Total Long Distance Charges</label>
+                <input type="number" name="total_long_distance_charges" id="total_long_distance_charges" step="0.01" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="total_revenue">Total Revenue</label>
+                <input type="number" name="total_revenue" id="total_revenue" step="0.01" min="0" required>
+            </div>
+            
+            <button type="submit" class="submit-btn">Predict Customer Status</button>
+        </form>
+        
+        {% if prediction %}
+        <div class="result {{ 'stayed' if prediction == 'Stayed' else 'churned' }}">
+            Prediction: Customer {{ prediction }}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
