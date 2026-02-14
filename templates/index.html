@@ -92,25 +92,157 @@
             padding: 20px;
             border-radius: 10px;
             text-align: center;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
         }
         
         .result.churned {
             background-color: #fee;
             color: #c33;
+            border: 2px solid #c33;
         }
         
         .result.stayed {
             background-color: #efe;
             color: #3c3;
+            border: 2px solid #3c3;
+        }
+
+        .result.joined {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            border: 2px solid #1976d2;
+        }
+
+        .category-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff3cd;
+            border-radius: 10px;
+            border: 2px solid #ffc107;
+        }
+
+        .category-title {
+            font-size: 20px;
+            color: #856404;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .shap-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #dee2e6;
+        }
+
+        .shap-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 8px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .feature-name {
+            flex: 0 0 280px;
+            font-weight: 500;
+            color: #555;
+            font-size: 13px;
+        }
+
+        .feature-value {
+            flex: 0 0 80px;
+            text-align: right;
+            font-family: monospace;
+            color: #333;
+            font-size: 13px;
+        }
+
+        .feature-bar {
+            flex: 1;
+            margin-left: 10px;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff4444, #ff6666);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .insights-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e8f5e9;
+            border-radius: 10px;
+            border: 2px solid #4caf50;
+        }
+
+        .insights-title {
+            font-size: 18px;
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .insight-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: white;
+            border-left: 4px solid #4caf50;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .recommendations {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 10px;
+            border: 2px solid #2196f3;
+        }
+
+        .recommendations-title {
+            font-size: 18px;
+            color: #1565c0;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .recommendation-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: white;
+            border-left: 4px solid #2196f3;
+            border-radius: 4px;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Customer Churn Prediction</h1>
-        <p class="subtitle">Random Forest Model - Predict if a customer will stay or leave</p>
+        <h1>🔮 Customer Churn Prediction</h1>
+        <p class="subtitle">AI-Powered Churn Prediction with SHAP Explanations</p>
         
         <form action="/predict" method="POST">
             <div class="form-group">
@@ -139,11 +271,6 @@
             <div class="form-group">
                 <label for="number_of_dependents">Number of Dependents</label>
                 <input type="number" name="number_of_dependents" id="number_of_dependents" min="0" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="city">City</label>
-                <input type="text" name="city" id="city" required>
             </div>
             
             <div class="form-group">
@@ -347,9 +474,58 @@
         </form>
         
         {% if prediction %}
-        <div class="result {{ 'stayed' if prediction == 'Stayed' else 'churned' }}">
-            Prediction: Customer {{ prediction }}
+        <div class="result {% if prediction == 'Stayed' %}stayed{% elif prediction == 'Joined' %}joined{% else %}churned{% endif %}">
+            🎯 Prediction: Customer {{ prediction }}
         </div>
+        
+        {% if category %}
+        <div class="category-section">
+            <div class="category-title">🏷️ Churn Category: {{ category }}</div>
+        </div>
+        {% endif %}
+        
+        {% if top_features %}
+        <div class="shap-section">
+            <div class="shap-title">🔍 Top Features Causing Churn:</div>
+            {% for feature in top_features %}
+            <div class="feature-item">
+                <div class="feature-name">{{ feature.name }}</div>
+                <div class="feature-value">{{ feature.value }}</div>
+                <div class="feature-bar">
+                    <div class="bar-fill" data-width="{{ feature.value }}"></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <script>
+            // Set bar widths using JavaScript to avoid Jinja syntax issues
+            document.querySelectorAll('.bar-fill').forEach(function(bar) {
+                var width = parseFloat(bar.getAttribute('data-width')) * 100;
+                if (width > 100) width = 100;
+                if (width < 0) width = 0;
+                bar.style.width = width + '%';
+            });
+        </script>
+        {% endif %}
+        
+        {% if insights %}
+        <div class="insights-section">
+            <div class="insights-title">💡 Key Risk Factors:</div>
+            {% for insight in insights %}
+            <div class="insight-item">{{ insight }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% if recommendations %}
+        <div class="recommendations">
+            <div class="recommendations-title">✅ Recommendations:</div>
+            {% for rec in recommendations %}
+            <div class="recommendation-item">{{ rec }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
         {% endif %}
     </div>
 </body>
