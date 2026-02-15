@@ -394,7 +394,7 @@ This project is licensed under the MIT License.
 
 <div align="center">
 
-**Made with ❤️ and ☕ by the ChurnAI Team**
+**Made with ❤️ and ☕ by Mr. Ahmed Raza**
 
 ⭐ Star this repo if you find it useful!
 
