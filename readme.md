@@ -162,7 +162,7 @@ CHURN-PREDICTION/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/churn-prediction.git
+   git clone https://github.com/ahmeddraza/churn-prediction.git
    cd churn-prediction
    ```
 
@@ -389,7 +389,6 @@ This project is licensed under the MIT License.
 ## 📞 Contact & Support
 
 - **Email**: ahemdraza810@gmail.com
-- **Issues**: [GitHub Issues](https://github.com/ahmeddraza/churn-prediction/issues)
 
 ---
 
