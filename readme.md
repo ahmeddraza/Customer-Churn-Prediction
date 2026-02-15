@@ -705,7 +705,7 @@ copies of the Software...
 
 ## 📞 Contact & Support
 
-- **Developer**: Ahmed Raza
+- **Developer**: AhmedRaza
 - **Email**: ahemdraza810@gmail.com
 - **GitHub**: [@ahmeddraza](https://github.com/ahmeddraza)
 - **Repository**: [Churn-Prediction-WebApp](https://github.com/ahmeddraza/Churn-Prediction-WebApp)
