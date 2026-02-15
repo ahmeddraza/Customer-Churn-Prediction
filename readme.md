@@ -388,8 +388,8 @@ This project is licensed under the MIT License.
 
 ## 📞 Contact & Support
 
-- **Email**: your.email@example.com
-- **Issues**: [GitHub Issues](https://github.com/yourusername/churn-prediction/issues)
+- **Email**: ahemdraza810@gmail.com
+- **Issues**: [GitHub Issues](https://github.com/ahmeddraza/churn-prediction/issues)
 
 ---
 
