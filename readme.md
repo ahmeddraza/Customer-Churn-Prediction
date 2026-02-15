@@ -168,8 +168,8 @@ CHURN-PREDICTION/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/churn-prediction-ml-webapp.git
-   cd churn-prediction-ml-webapp
+   git clone https://github.com/ahmeddraza/Churn-Prediction-WebApp.git
+   cd Churn-Prediction-WebApp
    ```
 
 2. **Create virtual environment**
@@ -707,9 +707,9 @@ copies of the Software...
 
 - **Developer**: Ahem Draza
 - **Email**: ahemdraza810@gmail.com
-- **GitHub**: [@yourusername](https://github.com/yourusername)
-- **Repository**: [churn-prediction-ml-webapp](https://github.com/yourusername/churn-prediction-ml-webapp)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/churn-prediction-ml-webapp/issues)
+- **GitHub**: [@ahmeddraza](https://github.com/ahmeddraza)
+- **Repository**: [Churn-Prediction-WebApp](https://github.com/ahmeddraza/Churn-Prediction-WebApp)
+- **Issues**: [GitHub Issues](https://github.com/ahmeddraza/Churn-Prediction-WebApp/issues)
 
 ---
 
