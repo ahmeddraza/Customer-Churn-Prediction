@@ -213,13 +213,9 @@ def calculate_dynamic_threshold(clv, retention_cost=50):
     Returns:
         Optimal threshold for this customer
     """
-    # Calculate threshold using cost-sensitive formula
-    # threshold = FP_cost / (FP_cost + FN_cost)
-    fn_cost = clv  # Cost of missing this churner = their CLV
+    fn_cost = clv  
     optimal_threshold = retention_cost / (retention_cost + fn_cost)
     
-    # Apply reasonable bounds based on customer value tiers
-    # Don't let it go too extreme - we still need reasonable predictions
     if clv >= 2000:  # Very high value
         optimal_threshold = max(optimal_threshold, 0.25)  # At least 25%
     elif clv >= 1000:  # High value
@@ -247,7 +243,7 @@ def predict():
     try:
         data = request.form.to_dict()
         
-        # Step 1: Predict churn status
+        # Predict churn status
         input_df_churn = preprocess_for_churn(data)
         churn_proba = rf.predict_proba(input_df_churn)[0]
         
@@ -333,7 +329,7 @@ def predict():
             recommendations.append("📊 Schedule account review meeting")
             recommendations.append("💡 Highlight unused services or features")
         
-        # Step 2: Calculate SHAP values for ALL churned customers
+        # Calculate SHAP values for ALL churned customers
         if prediction_label == "Churned":
             try:
                 # Compute SHAP values for churn model
@@ -352,10 +348,9 @@ def predict():
                 feature_impact = feature_impact.sort_values('shap_value', ascending=False)
                 top_hurting = feature_impact[feature_impact['shap_value'] > 0].head(10)
                 
-                # Format for template (convert to percentage and round)
                 top_features = [
                     {
-                        'name': format_feature_name(row['feature']),  # Use formatted name
+                        'name': format_feature_name(row['feature']),  
                         'value': round(row['shap_value'] * 100, 2)
                     }
                     for idx, row in top_hurting.iterrows()
@@ -368,7 +363,7 @@ def predict():
                 import traceback
                 traceback.print_exc()
         
-        # Step 3: If churned AND category model exists, predict category
+        # If churned AND category model exists, predict category
         if prediction_label == "Churned" and HAS_CATEGORY_MODEL:
             try:
                 # Preprocess for category prediction
