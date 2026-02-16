@@ -15,6 +15,52 @@
 
 ---
 
+## 🌐 Live Demo
+
+<div align="center">
+
+### **[👉 Click Here to Access Live Application 👈](https://churn-ai-fb934893acab.herokuapp.com/)**
+
+🎯 **Try it now** - Fully deployed and ready to use!
+
+</div>
+
+### What You Can Do:
+
+- ✅ **No Setup Required** - Works instantly in your browser
+- 🔒 **Secure** - HTTPS encrypted connection  
+- 📱 **Responsive** - Works on desktop, tablet, and mobile
+- 🚀 **Fast** - Optimized for quick predictions
+- 💡 **Interactive** - See SHAP explanations and revenue impact in real-time
+
+### Test Features:
+
+1. **Dynamic Threshold Predictions** - See personalized thresholds based on customer value
+2. **Revenue Impact Analysis** - View CLV, revenue at risk, and ROI calculations
+3. **SHAP Explainability** - Understand which features drive churn predictions
+4. **Category Classification** - Identify WHY customers are leaving
+5. **Smart Recommendations** - Get ROI-based retention strategies
+
+### Sample Data to Try:
+
+**High-Risk Customer Example:**
+- Age: 68
+- Tenure: 3 months
+- Contract: Month-to-Month
+- Monthly Charge: $95.50
+- Internet Type: Fiber Optic
+- Online Security: No
+
+**Low-Risk Customer Example:**
+- Age: 35
+- Tenure: 48 months
+- Contract: Two Year
+- Monthly Charge: $65.00
+- Internet Type: Cable
+- Online Security: Yes
+
+---
+
 ## 📋 Table of Contents
 
 - [Overview](#-overview)
